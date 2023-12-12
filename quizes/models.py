@@ -1,5 +1,5 @@
 from django.db import models
-
+import random
 
 class Quiz(models.Model):
     name = models.CharField(max_length=120)
@@ -12,7 +12,9 @@ class Quiz(models.Model):
         return self.name
 
     def get_questions(self):
-        return self.question_set.all()
+        questions = list(self.question_set.all())
+        random.shuffle(questions)
+        return questions
 
     class Meta:
         verbose_name_plural = 'Quizes'

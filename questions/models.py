@@ -1,5 +1,6 @@
 from django.db import models
 from quizes.models import Quiz
+import random
 
 
 class Question(models.Model):
@@ -12,7 +13,9 @@ class Question(models.Model):
         return self.text
 
     def get_answers(self):
-        return self.answer_set.all()
+        answers = list(self.answer_set.all())
+        random.shuffle(answers)
+        return answers
 
 
 class Answer(models.Model):
