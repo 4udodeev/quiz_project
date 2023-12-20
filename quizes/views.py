@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from questions.models import Question, Answer
 from results.models import Result
 
+
 class QuizListView(ListView):
     model = Quiz
     template_name = 'quizes/main.html'
@@ -20,9 +21,10 @@ def quiz_data_view(request, pk):
     questions = []
     for q in quiz.get_questions():
         answers = []
+        type_quest = q.type_of_question
         for a in q.get_answers():
             answers.append(a.text)
-        questions.append({str(q): answers})
+        questions.append({str(q): [type_quest, answers]})
     return JsonResponse({
         'data': questions,
         'time': quiz.time,
@@ -51,7 +53,7 @@ def save_quiz_view(request, pk):
     score = 0
     multiplier = 100 / quiz.number_of_questions
     results = []
-    correct_answer = None
+    correct_answer = []
 
     for q in questions:
         a_selected = request.POST.get(str(q.text))
@@ -63,10 +65,10 @@ def save_quiz_view(request, pk):
                 if a_selected == a.text:
                     if a.correct:
                         score += 1
-                        correct_answer = a.text
+                        correct_answer += a.text + ';'
                 else:
                     if a.correct:
-                        correct_answer = a.text
+                        correct_answer = a.text + ';'
             results.append({str(q): {'correct_answer': correct_answer, 'answered': a_selected}})
         else:
             results.append({str(q): 'not answered'})

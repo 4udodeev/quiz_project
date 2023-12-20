@@ -4,8 +4,20 @@ import random
 
 
 class Question(models.Model):
+    CERT_TYPES = (
+        ('single', 'единственный выбор'),
+        ('multiple', 'множественный выбор'),
+        ('range', 'ранжирование'),
+        ('mapping', 'сопоставление')
+    )
+
     text = models.CharField(max_length=254)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    type_of_question = models.CharField(
+        max_length=25,
+        choices=CERT_TYPES,
+        default='единственный выбор'
+    )
     question_weight = models.IntegerField(help_text='Вес вопроса', default=1)
     created = models.DateTimeField(auto_now_add=True)
 
