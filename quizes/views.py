@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from questions.models import Question, Answer
 from results.models import Result
 
+
 class QuizListView(ListView):
     model = Quiz
     template_name = 'quizes/main.html'
@@ -20,9 +21,11 @@ def quiz_data_view(request, pk):
     questions = []
     for q in quiz.get_questions():
         answers = []
+        q_type = q.question_type
         for a in q.get_answers():
             answers.append(a.text)
-        questions.append({str(q): answers})
+        q_data = {q_type: answers}
+        questions.append({str(q): q_data})
     return JsonResponse({
         'data': questions,
         'time': quiz.time,
